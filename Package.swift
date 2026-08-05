@@ -14,7 +14,8 @@ let package = Package(
         .library(name: "RegexTester", targets: ["RegexTester"]),
     ],
     targets: [
-        .target(name: "RegexTester", path: "Sources"),
+        .target(name: "RegexTester", path: "Sources",
+                swiftSettings: [.unsafeFlags(["-strict-concurrency=complete"])]),
         .testTarget(name: "RegexTesterTests", dependencies: ["RegexTester"], path: "Tests"),
     ]
 )

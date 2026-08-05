@@ -12,7 +12,7 @@ import Foundation
 /// The set of pattern flags a regex-tester panel exposes as checkboxes. Each maps
 /// directly to an `NSRegularExpression.Options` case; combine them with set syntax
 /// (`[.caseInsensitive, .anchorsMatchLines]`).
-public struct RegexOptions: OptionSet {
+public struct RegexOptions: OptionSet, Sendable {
 
     /// The raw bit field backing the option set.
     public let rawValue: Int
