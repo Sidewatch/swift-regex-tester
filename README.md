@@ -57,6 +57,12 @@ RegexTester.replace(pattern: #"(\d+)"#, in: "a1b22", template: "[$1]").string  /
 RegexTester.replace(pattern: #"(?<n>\d+)"#, in: "a1b22", template: "<${n}>").string  // "a<1>b<22>"
 ```
 
+## For agents
+
+Read `CONTRIBUTING.md` first: the folder layout and the PR rules. `swift test` is the whole
+check, and a new test must fail before the change it covers. `CLAUDE.md` / `AGENTS.md` carry a
+module map.
+
 ## License
 
 MIT © 2026 David Sherlock (ArrayPress)
