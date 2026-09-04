@@ -46,72 +46,53 @@ public enum RegexPattern {
     /// that are escaped or sit inside a `[…]` character class.
     static func captureGroups(in pattern: String) -> [CaptureGroup] {
         let chars = Array(pattern)
-        let count = chars.count
         var groups: [CaptureGroup] = []
-        var groupIndex = 0
         var inClass = false
         var i = 0
-
-        while i < count {
-            let c = chars[i]
-
-            // An escape consumes the next character wherever it appears (incl. in classes).
-            if c == "\\" {
-                i += 2
-                continue
-            }
-
-            if inClass {
-                if c == "]" { inClass = false }
+        while i < chars.count {
+            switch chars[i] {
+            case "\\":
+                i += 2                                   // an escape consumes the next character, in classes too
+            case "]" where inClass:
+                inClass = false; i += 1
+            case _ where inClass:
                 i += 1
-                continue
-            }
-
-            if c == "[" {
-                inClass = true
+            case "[":
+                inClass = true; i += 1
+            case "(":
+                let opener = GroupOpener(chars, at: i)
+                if opener.captures { groups.append(CaptureGroup(index: groups.count + 1, name: opener.name)) }
+                i = opener.next
+            default:
                 i += 1
-                continue
             }
-
-            if c == "(" {
-                // `(?…` is some special construct; a bare `(` is a plain capturing group.
-                if i + 1 < count, chars[i + 1] == "?" {
-                    let third = i + 2 < count ? chars[i + 2] : " "
-                    if third == "<" {
-                        let fourth = i + 3 < count ? chars[i + 3] : " "
-                        if fourth == "=" || fourth == "!" {
-                            i += 1                              // lookbehind — non-capturing
-                        } else {
-                            let (name, next) = readName(chars, from: i + 3, terminator: ">")
-                            groupIndex += 1
-                            groups.append(CaptureGroup(index: groupIndex, name: name))
-                            i = next
-                        }
-                    } else if third == "'" {
-                        let (name, next) = readName(chars, from: i + 3, terminator: "'")
-                        groupIndex += 1
-                        groups.append(CaptureGroup(index: groupIndex, name: name))
-                        i = next
-                    } else if third == "P", i + 3 < count, chars[i + 3] == "<" {
-                        let (name, next) = readName(chars, from: i + 4, terminator: ">")
-                        groupIndex += 1
-                        groups.append(CaptureGroup(index: groupIndex, name: name))
-                        i = next
-                    } else {
-                        i += 1                                  // (?:…), (?=…), (?i), (?#…), …
-                    }
-                } else {
-                    groupIndex += 1
-                    groups.append(CaptureGroup(index: groupIndex, name: nil))
-                    i += 1
-                }
-                continue
-            }
-
-            i += 1
         }
-
         return groups
+    }
+
+    /// What a `(` at `index` opens: a plain capturing group, a named one (`(?<name>…)`,
+    /// `(?'name'…)`, `(?P<name>…)`), or a non-capturing construct — `(?:…)`, lookaround,
+    /// atomic `(?>…)`, inline flags `(?i)`, comments `(?#…)`.
+    private struct GroupOpener {
+        let captures: Bool
+        let name: String?
+        /// Where scanning resumes.
+        let next: Int
+
+        init(_ chars: [Character], at i: Int) {
+            func at(_ k: Int) -> Character { k < chars.count ? chars[k] : " " }
+            guard at(i + 1) == "?" else { captures = true; name = nil; next = i + 1; return }
+            switch at(i + 2) {
+            case "<" where at(i + 3) != "=" && at(i + 3) != "!":
+                (name, next) = RegexPattern.readName(chars, from: i + 3, terminator: ">"); captures = true
+            case "'":
+                (name, next) = RegexPattern.readName(chars, from: i + 3, terminator: "'"); captures = true
+            case "P" where at(i + 3) == "<":
+                (name, next) = RegexPattern.readName(chars, from: i + 4, terminator: ">"); captures = true
+            default:
+                captures = false; name = nil; next = i + 1   // lookbehind, (?:…), (?=…), (?i), (?#…), …
+            }
+        }
     }
 
     /// Read a group name starting at `start` up to (not including) `terminator`, returning
