@@ -24,7 +24,7 @@ A dependency-free, read-only engine for a regex-tester tool panel: evaluate a pa
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/Sidewatch/swift-regex-tester.git", from: "1.0.0")
+    .package(url: "https://github.com/Sidewatch/swift-regex-tester.git", from: "0.1.0")
 ]
 ```
 
