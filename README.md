@@ -16,7 +16,7 @@ A dependency-free, read-only engine for a regex-tester tool panel: evaluate a pa
 ## Requirements
 
 - macOS 14+ (Foundation only; other Apple platforms at SwiftPM's default minimums)
-- Swift 6.0+ (Swift 6 language mode)
+- Swift 6.2+ (Swift 6 language mode)
 
 ## Installation
 
