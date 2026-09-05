@@ -2,6 +2,10 @@
 //  Match.swift
 //  RegexTester
 //
+//  A single whole-pattern match, plus its capture groups.
+//
+//  Created by David Sherlock on 9/5/26.
+//
 
 import Foundation
 

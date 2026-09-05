@@ -2,12 +2,17 @@
 //  RegexTesterTests.swift
 //  Tests for SwiftRegexTester
 //
+//  Tests for `RegexTester.evaluate`: matches, capture groups, the error path for a bad pattern,
+//  and replacement previews.
+//
 //  Created by David Sherlock on 7/18/26.
 //
 
 import XCTest
 @testable import RegexTester
 
+/// Tests for `RegexTester.evaluate`: matches, capture groups, the error path for a bad pattern,
+/// and replacement previews.
 final class RegexTesterTests: XCTestCase {
 
     // MARK: - Numbered capture groups

@@ -2,6 +2,11 @@
 //  EvaluationResult.swift
 //  RegexTester
 //
+//  The outcome of `RegexTester.evaluate`: either the pattern failed to compile, or it compiled
+//  and produced zero or more matches.
+//
+//  Created by David Sherlock on 9/5/26.
+//
 
 import Foundation
 
