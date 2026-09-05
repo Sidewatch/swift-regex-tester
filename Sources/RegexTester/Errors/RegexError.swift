@@ -1,3 +1,12 @@
+//
+//  RegexError.swift
+//  RegexTester
+//
+//  A pattern that failed to compile.
+//
+//  Created by David Sherlock on 9/5/26.
+//
+
 import Foundation
 
 /// A pattern that failed to compile. Errors are returned as values — the public API
