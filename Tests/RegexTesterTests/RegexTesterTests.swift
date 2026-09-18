@@ -114,6 +114,18 @@ final class RegexTesterTests: XCTestCase {
         XCTAssertEqual(result.string, "a<1>b<22>")
     }
 
+    func testANamedReferenceFollowedByADigitStaysThatGroup() {
+        // ICU reads `$11` as group 11 whenever the pattern has that many groups, so `${first}1`
+        // expanded to `$11` named the wrong group. The digit after a reference is escaped so it
+        // stays literal — `$1\1` — which ICU reads as group 1 then the character `1`.
+        let pattern = #"(?<first>a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)"#
+        XCTAssertEqual(RegexPattern.expandNamedReferences(in: "${first}1", pattern: pattern), "$1\\1")
+        let result = RegexTester.replace(pattern: pattern, in: "abcdefghijk", template: "${first}1")
+        XCTAssertEqual(result.string, "a1")
+        // A reference not followed by a digit is untouched, as is one followed by a letter.
+        XCTAssertEqual(RegexPattern.expandNamedReferences(in: "${first}x", pattern: pattern), "$1x")
+    }
+
     func testReplaceInvalidPatternReturnsError() {
         let result = RegexTester.replace(pattern: "(", in: "abc", template: "x")
         XCTAssertNotNil(result.error)

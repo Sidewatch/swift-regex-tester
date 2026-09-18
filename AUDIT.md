@@ -20,6 +20,20 @@ dead-code and risk-pattern scans, docs drift); line-by-line logic review was tar
 - Build: clean. Tests: green.
 - Nothing to fix in this package.
 
+## Logic review — 18 Sep 2026 (every source and test file, line by line)
+
+Fixed, pinned by a test that fails against the old code:
+
+- **`${name}` followed by a digit named the wrong group.** `expandNamedReferences` rewrote
+  `${first}1` to `$11`, and ICU reads that as group 11 whenever the pattern has that many groups
+  (measured 18 Sep 2026: `$11` on an 11-group pattern substitutes group 11; with one group it is
+  group 1 then `1`). A digit right after a reference is now escaped — `$1\1` — which ICU reads as
+  group 1 then the character.
+
+Reviewed and sound: `captureGroups`' escape and class skipping and every `GroupOpener` form,
+`evaluate`'s UTF-16 offsets against the `Range<String.Index>` round trip, a non-participating group
+as nil, the empty pattern and empty input, the compile-error path in both `evaluate` and `replace`.
+
 ## Known non-issues (do not "fix" these again)
 
 - None recorded.
@@ -27,3 +41,4 @@ dead-code and risk-pattern scans, docs drift); line-by-line logic review was tar
 ## History
 
 - 17 Sep 2026 — full audit (app + all 20 libraries), Claude with David.
+- 18 Sep 2026 — logic review (every source and test file, line by line), Claude with David.

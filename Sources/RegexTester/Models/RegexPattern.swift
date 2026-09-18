@@ -111,7 +111,8 @@ public enum RegexPattern {
     /// Rewrite `${name}` references in a replacement `template` into the `$<index>` form
     /// `NSRegularExpression` understands, using the named groups declared in `pattern`.
     /// References to unknown names, and all other characters (including escaped `\$`), are
-    /// left untouched.
+    /// left untouched; a digit that directly follows a reference is escaped so ICU cannot read
+    /// it as part of the group number.
     static func expandNamedReferences(in template: String, pattern: String) -> String {
         guard template.contains("${") else { return template }
         let map = nameToIndex(in: pattern)
@@ -143,6 +144,10 @@ public enum RegexPattern {
                 if j < count, chars[j] == "}", let index = map[name] {
                     out += "$\(index)"
                     i = j + 1
+                    // ICU reads `$11` as group 11 whenever the pattern has that many groups, so a
+                    // digit right after the reference is escaped to stay literal: `${first}1`
+                    // becomes `$1\1`, which ICU reads as group 1 then the character `1`.
+                    if i < count, chars[i].isASCII, chars[i].isNumber { out += "\\" }
                     continue
                 }
             }
