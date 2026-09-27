@@ -18,18 +18,11 @@ import Foundation
 /// while `offset`/`length` expose the same spans in UTF-16 code units.
 public enum RegexTester {
 
-    /// Compile `pattern` and find every match in `string`.
+    /// Compiles `pattern` and finds every match in `string`.
     ///
-    /// Returns `.error` (with a message) when the pattern is invalid, or `.matches` — which
-    /// is empty, never an error, when a valid pattern simply doesn't match. Each `Match`
-    /// carries its full-match slice, numbered capture groups (1…n, `nil` where a group
-    /// didn't participate), and a name→text map for `(?<name>…)` groups.
-    ///
-    /// - Parameters:
-    ///   - pattern: The regular expression source.
-    ///   - string: The text to search.
-    ///   - options: Compile-time flags (see `RegexOptions`).
-    /// - Returns: An `EvaluationResult`.
+    /// Returns `.error` when the pattern is invalid, else `.matches` — empty, never an error,
+    /// when nothing matches. Each `Match` carries the full match, numbered groups (`nil` where a
+    /// group did not participate) and a name→text map for `(?<name>…)` groups.
     public static func evaluate(pattern: String, in string: String,
                                 options: RegexOptions = []) -> EvaluationResult {
         let regex: NSRegularExpression
@@ -45,19 +38,11 @@ public enum RegexTester {
         return .matches(results.map { match($0, in: string, names: names) })
     }
 
-    /// Compile `pattern` and replace every match in `string` with `template`.
+    /// Compiles `pattern` and replaces every match in `string` with `template`.
     ///
     /// The template uses `NSRegularExpression` semantics — `$0` is the whole match, `$1`…`$n`
-    /// are numbered groups, and `\$` is a literal dollar. As a convenience, `${name}`
-    /// references to named groups are expanded to their numeric form before replacement.
-    /// Returns `.error` when the pattern is invalid.
-    ///
-    /// - Parameters:
-    ///   - pattern: The regular expression source.
-    ///   - string: The text to transform.
-    ///   - template: The replacement template.
-    ///   - options: Compile-time flags (see `RegexOptions`).
-    /// - Returns: A `ReplacementResult`.
+    /// numbered groups, `\$` a literal dollar — plus `${name}` for named groups, expanded to
+    /// the numeric form first. Returns `.error` when the pattern is invalid.
     public static func replace(pattern: String, in string: String, template: String,
                                options: RegexOptions = []) -> ReplacementResult {
         let regex: NSRegularExpression
