@@ -65,4 +65,4 @@ module map.
 
 ## License
 
-MIT © 2026 David Sherlock (ArrayPress)
+MIT — see [LICENSE](LICENSE).
