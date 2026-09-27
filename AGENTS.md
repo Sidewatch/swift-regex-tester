@@ -10,7 +10,7 @@ A dependency-free, read-only engine for a regex-tester tool panel: evaluate a pa
 
 - `Core/` — the engine: RegexTester
 - `Errors/` — every Error type, one per file: RegexError
-- `Models/` — value types — the shape of a thing, nothing else: RegexOptions, RegexPattern, RegexResult
+- `Models/` — value types — the shape of a thing, nothing else: RegexOptions, RegexPattern, Match, Group
 
 ## Rules
 

@@ -1,8 +1,8 @@
 //
-//  RegexResult.swift
+//  Group.swift
 //  RegexTester
 //
-//  The value types a regex evaluation returns: matches, capture groups, and errors.
+//  One capture group's slice of the input.
 //
 //  Created by David Sherlock on 7/18/26.
 //  Copyright © 2026 ArrayPress Limited. MIT licence.
