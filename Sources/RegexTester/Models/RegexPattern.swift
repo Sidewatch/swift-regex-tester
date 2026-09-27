@@ -1,10 +1,11 @@
 //
 //  RegexPattern.swift
-//  SwiftRegexTester
+//  RegexTester
 //
 //  Lightweight pattern scanning: enumerate capture groups and their names without a regex.
 //
 //  Created by David Sherlock on 7/18/26.
+//  Copyright © 2026 ArrayPress Limited. MIT licence.
 //
 
 import Foundation

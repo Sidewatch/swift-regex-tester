@@ -1,11 +1,12 @@
 //
 //  RegexTesterTests.swift
-//  Tests for SwiftRegexTester
+//  RegexTesterTests
 //
 //  Tests for `RegexTester.evaluate`: matches, capture groups, the error path for a bad pattern,
 //  and replacement previews.
 //
 //  Created by David Sherlock on 7/18/26.
+//  Copyright © 2026 ArrayPress Limited. MIT licence.
 //
 
 import XCTest

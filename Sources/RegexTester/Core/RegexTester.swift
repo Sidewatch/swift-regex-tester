@@ -1,11 +1,12 @@
 //
 //  RegexTester.swift
-//  SwiftRegexTester
+//  RegexTester
 //
 //  Evaluate a pattern against a string (or replace with a template) and return structured,
 //  crash-free results — the read-only logic behind a regex-tester panel.
 //
 //  Created by David Sherlock on 7/18/26.
+//  Copyright © 2026 ArrayPress Limited. MIT licence.
 //
 
 import Foundation

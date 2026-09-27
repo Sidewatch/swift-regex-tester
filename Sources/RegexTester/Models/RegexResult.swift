@@ -1,10 +1,11 @@
 //
 //  RegexResult.swift
-//  SwiftRegexTester
+//  RegexTester
 //
 //  The value types a regex evaluation returns: matches, capture groups, and errors.
 //
 //  Created by David Sherlock on 7/18/26.
+//  Copyright © 2026 ArrayPress Limited. MIT licence.
 //
 
 import Foundation
