@@ -30,7 +30,7 @@ final class RegexTesterTests: XCTestCase {
         XCTAssertEqual(matches[0].group(3)?.value, "com")
 
         XCTAssertEqual(matches[1].value, "x@y.io")
-        XCTAssertEqual(matches[1].groups[0]?.value, "x")   // groups[0] == group(1)
+        XCTAssertEqual(matches[1].groups[0]?.value, "x")  // groups[0] == group(1)
         XCTAssertEqual(matches[1].groups[1]?.value, "y")
         XCTAssertEqual(matches[1].groups[2]?.value, "io")
     }
@@ -46,8 +46,9 @@ final class RegexTesterTests: XCTestCase {
     }
 
     func testNamedGroupExtractionFromPattern() {
-        XCTAssertEqual(RegexPattern.namedGroups(in: #"(?<year>\d{4})-(?<month>\d{2})"#),
-                       ["year", "month"])
+        XCTAssertEqual(
+            RegexPattern.namedGroups(in: #"(?<year>\d{4})-(?<month>\d{2})"#),
+            ["year", "month"])
         // Lookbehind must NOT be mistaken for a named group.
         XCTAssertEqual(RegexPattern.namedGroups(in: #"(?<=x)(?<tail>\w+)"#), ["tail"])
         // Quote form.
@@ -64,8 +65,9 @@ final class RegexTesterTests: XCTestCase {
     }
 
     func testAnchorsMatchLines() {
-        let withOption = RegexTester.evaluate(pattern: #"^\w+"#, in: "foo\nbar",
-                                              options: [.anchorsMatchLines])
+        let withOption = RegexTester.evaluate(
+            pattern: #"^\w+"#, in: "foo\nbar",
+            options: [.anchorsMatchLines])
         XCTAssertEqual(withOption.matches?.map { $0.value }, ["foo", "bar"])
 
         let withoutOption = RegexTester.evaluate(pattern: #"^\w+"#, in: "foo\nbar")
@@ -100,7 +102,7 @@ final class RegexTesterTests: XCTestCase {
         guard let match = result.matches?.first else { return XCTFail("expected a match") }
         XCTAssertEqual(match.value, "a")
         XCTAssertEqual(match.group(1)?.value, "a")
-        XCTAssertNil(match.group(2))       // second alternative didn't participate
+        XCTAssertNil(match.group(2))  // second alternative didn't participate
     }
 
     // MARK: - Replacement
@@ -155,8 +157,8 @@ final class RegexTesterTests: XCTestCase {
         let result = RegexTester.evaluate(pattern: "ok", in: input)
         guard let match = result.matches?.first else { return XCTFail("expected a match") }
         XCTAssertEqual(match.value, "ok")
-        XCTAssertEqual(match.offset, 2)      // UTF-16 code units, not characters
+        XCTAssertEqual(match.offset, 2)  // UTF-16 code units, not characters
         XCTAssertEqual(match.length, 2)
-        XCTAssertEqual(String(input[match.range]), "ok")   // range still indexes correctly
+        XCTAssertEqual(String(input[match.range]), "ok")  // range still indexes correctly
     }
 }

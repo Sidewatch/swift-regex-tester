@@ -23,8 +23,10 @@ public enum RegexTester {
     /// Returns `.error` when the pattern is invalid, else `.matches` — empty, never an error,
     /// when nothing matches. Each `Match` carries the full match, numbered groups (`nil` where a
     /// group did not participate) and a name→text map for `(?<name>…)` groups.
-    public static func evaluate(pattern: String, in string: String,
-                                options: RegexOptions = []) -> EvaluationResult {
+    public static func evaluate(
+        pattern: String, in string: String,
+        options: RegexOptions = []
+    ) -> EvaluationResult {
         let regex: NSRegularExpression
         do {
             regex = try NSRegularExpression(pattern: pattern, options: options.nsOptions)
@@ -43,8 +45,10 @@ public enum RegexTester {
     /// The template uses `NSRegularExpression` semantics — `$0` is the whole match, `$1`…`$n`
     /// numbered groups, `\$` a literal dollar — plus `${name}` for named groups, expanded to
     /// the numeric form first. Returns `.error` when the pattern is invalid.
-    public static func replace(pattern: String, in string: String, template: String,
-                               options: RegexOptions = []) -> ReplacementResult {
+    public static func replace(
+        pattern: String, in string: String, template: String,
+        options: RegexOptions = []
+    ) -> ReplacementResult {
         let regex: NSRegularExpression
         do {
             regex = try NSRegularExpression(pattern: pattern, options: options.nsOptions)
@@ -54,16 +58,19 @@ public enum RegexTester {
 
         let expanded = RegexPattern.expandNamedReferences(in: template, pattern: pattern)
         let fullRange = NSRange(string.startIndex..., in: string)
-        let output = regex.stringByReplacingMatches(in: string, options: [],
-                                                    range: fullRange, withTemplate: expanded)
+        let output = regex.stringByReplacingMatches(
+            in: string, options: [],
+            range: fullRange, withTemplate: expanded)
         return .replaced(output)
     }
 
     // MARK: - Building results
 
     /// Assemble a `Match` from one `NSTextCheckingResult` against `string`.
-    private static func match(_ result: NSTextCheckingResult, in string: String,
-                              names: [String]) -> Match {
+    private static func match(
+        _ result: NSTextCheckingResult, in string: String,
+        names: [String]
+    ) -> Match {
         let full = group(from: result.range, in: string)
 
         // Numbered groups 1…n (range 0 is the full match, handled above).
@@ -84,20 +91,23 @@ public enum RegexTester {
             }
         }
 
-        return Match(value: full?.value ?? "",
-                     range: full?.range ?? string.startIndex..<string.startIndex,
-                     offset: full?.offset ?? result.range.location,
-                     length: full?.length ?? 0,
-                     groups: groups,
-                     named: named)
+        return Match(
+            value: full?.value ?? "",
+            range: full?.range ?? string.startIndex..<string.startIndex,
+            offset: full?.offset ?? result.range.location,
+            length: full?.length ?? 0,
+            groups: groups,
+            named: named)
     }
 
     /// Convert an `NSRange` into a `Group`, or `nil` when the range didn't participate
     /// (`NSNotFound`) or can't be mapped back onto `string`.
     private static func group(from nsRange: NSRange, in string: String) -> Group? {
         guard nsRange.location != NSNotFound,
-              let range = Range(nsRange, in: string) else { return nil }
-        return Group(value: String(string[range]), range: range,
-                     offset: nsRange.location, length: nsRange.length)
+            let range = Range(nsRange, in: string)
+        else { return nil }
+        return Group(
+            value: String(string[range]), range: range,
+            offset: nsRange.location, length: nsRange.length)
     }
 }

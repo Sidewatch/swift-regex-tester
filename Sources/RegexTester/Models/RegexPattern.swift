@@ -53,7 +53,7 @@ public enum RegexPattern {
         while i < chars.count {
             switch chars[i] {
             case "\\":
-                i += 2                                   // an escape consumes the next character, in classes too
+                i += 2  // an escape consumes the next character, in classes too
             case "]" where inClass:
                 inClass = false; i += 1
             case _ where inClass:
@@ -91,22 +91,24 @@ public enum RegexPattern {
             case "P" where at(i + 3) == "<":
                 (name, next) = RegexPattern.readName(chars, from: i + 4, terminator: ">"); captures = true
             default:
-                captures = false; name = nil; next = i + 1   // lookbehind, (?:…), (?=…), (?i), (?#…), …
+                captures = false; name = nil; next = i + 1  // lookbehind, (?:…), (?=…), (?i), (?#…), …
             }
         }
     }
 
     /// Read a group name starting at `start` up to (not including) `terminator`, returning
     /// the name and the index just past the terminator.
-    private static func readName(_ chars: [Character], from start: Int,
-                                 terminator: Character) -> (name: String, next: Int) {
+    private static func readName(
+        _ chars: [Character], from start: Int,
+        terminator: Character
+    ) -> (name: String, next: Int) {
         var name = ""
         var i = start
         while i < chars.count, chars[i] != terminator {
             name.append(chars[i])
             i += 1
         }
-        return (name, min(i + 1, chars.count))   // skip the terminator
+        return (name, min(i + 1, chars.count))  // skip the terminator
     }
 
     /// Rewrite `${name}` references in a replacement `template` into the `$<index>` form

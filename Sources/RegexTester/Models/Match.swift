@@ -38,8 +38,10 @@ public struct Match: Equatable {
     public let named: [String: String]
 
     /// Create a match.
-    public init(value: String, range: Range<String.Index>, offset: Int, length: Int,
-                groups: [Group?], named: [String: String]) {
+    public init(
+        value: String, range: Range<String.Index>, offset: Int, length: Int,
+        groups: [Group?], named: [String: String]
+    ) {
         self.value = value
         self.range = range
         self.offset = offset
